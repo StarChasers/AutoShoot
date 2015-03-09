@@ -1,0 +1,63 @@
+apply plugin: 'java'
+apply plugin: 'scala'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+    	classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+  	}
+}
+
+sourceSets {
+    main {
+    	resources{
+    		srcDir 'resources'
+    	}
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+	compile 'com.google.guava:guava:18.0'
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'ch.qos.logback:logback-core:1.1.2'
+    compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
+    compile 'com.typesafe.akka:akka-actor_2.10:2.3.9'
+    compile 'com.typesafe.akka:akka-kernel_2.10:2.3.9'
+
+    def gdx = '1.5.4'
+    
+    compile 'com.badlogicgames.gdx:gdx-backend-lwjgl:'+gdx
+    compile 'com.badlogicgames.gdx:gdx:'+gdx
+    compile 'com.badlogicgames.gdx:gdx-platform:'+gdx+':natives-desktop'
+    compile 'com.badlogicgames.gdx:gdx-freetype:'+gdx
+    compile 'com.badlogicgames.gdx:gdx-freetype-platform:'+gdx+':natives-desktop'
+}
+
+compileJava {
+	options.fork = true
+	sourceCompatibility = "1.7"
+	targetCompatibility = "1.7"
+}
+
+javadoc {
+	include 'net/magik6k/autoshoot/**'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	from 'build/docs/javadoc'
+	classifier 'javadoc'
+}
+
