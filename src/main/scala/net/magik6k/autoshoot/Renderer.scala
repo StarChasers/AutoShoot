@@ -6,7 +6,7 @@ import scala.collection.mutable
 import akka.kernel.Bootable
 import akka.util.Timeout
 import scala.concurrent.duration._
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.{TextureRegion, SpriteBatch}
 import com.badlogic.gdx.graphics.{GL20, OrthographicCamera, Texture}
 import com.badlogic.gdx.{Gdx, ApplicationListener}
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
@@ -54,9 +54,9 @@ class AutoShooter(actorSystem: ActorSystem) extends ApplicationListener {
 
     batch.setProjectionMatrix(camera.combined)
 
-    while(System.nanoTime()/1000 - lastTick > (1000000/60)) {
+    while(System.nanoTime()/1000 - lastTick > (1000000/100)) {
       for(body <- bodies) body ! EntityUpdate
-      lastTick += (1000000/60)
+      lastTick += (1000000/100)
     }
 
     implicit val timeout = Timeout(500 millis)
@@ -64,7 +64,7 @@ class AutoShooter(actorSystem: ActorSystem) extends ApplicationListener {
     for(body <- bodies) {
       val position: EntityPosition = Await.result(body ? PositionRequest, timeout.duration).asInstanceOf[EntityPosition]
       //println("y '%d'" format position.y)
-      batch.draw(char, position.x,  position.y)
+      batch.draw(new TextureRegion(char), position.x,  position.y, 32, 32, 64, 64, 1, 1, position.rotation)
     }
     batch.end
 

@@ -16,6 +16,7 @@ class Ai extends Actor {
     case update: AiUpdate => {
       back = if(update.y > 500) true else if(update.y < 100) false else back
       sender ! Go(if(back) -1 else 1)
+      sender ! Rotate(0.5f)
     }
   }
 }
